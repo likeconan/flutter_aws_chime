@@ -12,12 +12,9 @@ import Flutter
 import Foundation
 import UIKit
 
-class MyRealtimeObserver: RealtimeObserver, DataMessageObserver {
-    func dataMessageDidReceived(dataMessage: AmazonChimeSDK.DataMessage) {
-        // todo
-    }
+class MyRealtimeObserver: RealtimeObserver {
     
-    weak var methodChannel: MethodChannelCoordinator?
+    var methodChannel: MethodChannelCoordinator
 
     init(withMethodChannel methodChannel: MethodChannelCoordinator) {
         self.methodChannel = methodChannel
@@ -33,31 +30,31 @@ class MyRealtimeObserver: RealtimeObserver, DataMessageObserver {
 
     func attendeesDidJoin(attendeeInfo: [AttendeeInfo]) {
         for currentAttendeeInfo in attendeeInfo {
-            methodChannel?.callFlutterMethod(method: .join, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
+            methodChannel.callFlutterMethod(method: .join, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
         }
     }
 
     func attendeesDidLeave(attendeeInfo: [AttendeeInfo]) {
         for currentAttendeeInfo in attendeeInfo {
-            methodChannel?.callFlutterMethod(method: .leave, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
+            methodChannel.callFlutterMethod(method: .leave, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
         }
     }
 
     func attendeesDidDrop(attendeeInfo: [AttendeeInfo]) {
         for currentAttendeeInfo in attendeeInfo {
-            methodChannel?.callFlutterMethod(method: .drop, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
+            methodChannel.callFlutterMethod(method: .drop, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
         }
     }
 
     func attendeesDidMute(attendeeInfo: [AttendeeInfo]) {
         for currentAttendeeInfo in attendeeInfo {
-            methodChannel?.callFlutterMethod(method: .mute, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
+            methodChannel.callFlutterMethod(method: .mute, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
         }
     }
 
     func attendeesDidUnmute(attendeeInfo: [AttendeeInfo]) {
         for currentAttendeeInfo in attendeeInfo {
-            methodChannel?.callFlutterMethod(method: .unmute, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
+            methodChannel.callFlutterMethod(method: .unmute, args: attendeeInfoToDictionary(attendeeInfo: currentAttendeeInfo))
         }
     }
 
@@ -65,6 +62,17 @@ class MyRealtimeObserver: RealtimeObserver, DataMessageObserver {
         return [
             "attendeeId": attendeeInfo.attendeeId,
             "externalUserId": attendeeInfo.externalUserId
+        ]
+    }
+    
+    private func messageInfoToDictionary(dataMessage: AmazonChimeSDK.DataMessage) ->[String:Any] {
+        return [
+            "senderAttendeeId": dataMessage.senderAttendeeId,
+            "senderExternalUserId": dataMessage.senderExternalUserId,
+            "topic":dataMessage.topic,
+            "timestampMs":dataMessage.timestampMs,
+            "message":  String(data: dataMessage.data, encoding: .utf8),
+            "throttled": dataMessage.throttled,
         ]
     }
 }

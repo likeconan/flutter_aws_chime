@@ -12,7 +12,7 @@ import Foundation
 
 class MyAudioVideoObserver: AudioVideoObserver {
     
-    weak var methodChannel: MethodChannelCoordinator?
+    var methodChannel: MethodChannelCoordinator
     
     init(withMethodChannel methodChannel: MethodChannelCoordinator) {
         self.methodChannel = methodChannel
@@ -28,13 +28,13 @@ class MyAudioVideoObserver: AudioVideoObserver {
     
     func audioSessionDidDrop() {
         MeetingSession.shared.meetingSession?.logger.info(msg: "Meeting session dropped")
-        methodChannel?.stopAudioVideoFacadeObservers()
+        methodChannel.stopAudioVideoFacadeObservers()
     }
     
     func audioSessionDidStopWithStatus(sessionStatus: MeetingSessionStatus) {
-        methodChannel?.stopAudioVideoFacadeObservers()
+        methodChannel.stopAudioVideoFacadeObservers()
         MeetingSession.shared.meetingSession?.logger.info(msg: "Meeting session stopped with status \(sessionStatus.description)")
-        methodChannel?.callFlutterMethod(method: .audioSessionDidStop, args: nil)
+        methodChannel.callFlutterMethod(method: .audioSessionDidStop, args: nil)
     }
     
     func audioSessionDidCancelReconnect() {

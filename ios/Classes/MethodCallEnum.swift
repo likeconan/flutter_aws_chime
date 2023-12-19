@@ -24,6 +24,9 @@ enum MethodCall: String {
     case listAudioDevices
     case updateAudioDevice
     case audioSessionDidStop
+    case messageReceived
+    case sendMessage
+    case toggleSound
 }
 
 enum Response: String {
@@ -63,5 +66,10 @@ enum Response: String {
     
     // Method Channel
     case method_not_implemented = "iOS: ERROR method not implemented."
+    
+    // Message
+    case message_sent_successful = "iOS: Successfully sent message."
+    case message_payload_error = "iOS: Error Message payload is wrong."
+    case message_sent_failed = "iOS: Error Could not sent message."
 }
 

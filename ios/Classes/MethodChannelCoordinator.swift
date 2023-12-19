@@ -11,6 +11,7 @@ import AVFoundation
 import Flutter
 import Foundation
 import UIKit
+import MediaPlayer
 
 class MethodChannelCoordinator {
     let methodChannel: FlutterMethodChannel
@@ -21,8 +22,13 @@ class MethodChannelCoordinator {
     
     var videoTileObserver: VideoTileObserver?
     
+    var dataMessageObserver: DataMessageObserver?
+    
+    var currentVolumeValue = AVAudioSession.sharedInstance().outputVolume
+    
+    
     init(binaryMessenger: FlutterBinaryMessenger) {
-        self.methodChannel = FlutterMethodChannel(name: "com.amazonaws.services.chime.flutterDemo.methodChannel", binaryMessenger: binaryMessenger)
+        self.methodChannel = FlutterMethodChannel(name: "com.oneplusdream.aws.chime.methodChannel", binaryMessenger: binaryMessenger)
     }
     
     //
@@ -32,35 +38,39 @@ class MethodChannelCoordinator {
     func setUpMethodCallHandler() {
         self.methodChannel.setMethodCallHandler { [unowned self]
             (call: FlutterMethodCall, result: @escaping FlutterResult) in
-                let callMethod = MethodCall(rawValue: call.method)
-                var response: MethodChannelResponse = .init(result: false, arguments: nil)
-                switch callMethod {
-                case .manageAudioPermissions:
-                    response = self.manageAudioPermissions()
-                case .manageVideoPermissions:
-                    response = self.manageVideoPermissions()
-                case .join:
-                    response = self.join(call: call)
-                case .stop:
-                    response = self.stop()
-                case .mute:
-                    response = self.mute()
-                case .unmute:
-                    response = self.unmute()
-                case .startLocalVideo:
-                    response = self.startLocalVideo()
-                case .stopLocalVideo:
-                    response = self.stopLocalVideo()
-                case .initialAudioSelection:
-                    response = self.initialAudioSelection()
-                case .listAudioDevices:
-                    response = self.listAudioDevices()
-                case .updateAudioDevice:
-                    response = self.updateAudioDevice(call: call)
-                default:
-                    response = MethodChannelResponse(result: false, arguments: Response.method_not_implemented)
-                }
-                result(response.toFlutterCompatibleType())
+            let callMethod = MethodCall(rawValue: call.method)
+            var response: MethodChannelResponse = .init(result: false, arguments: nil)
+            switch callMethod {
+            case .manageAudioPermissions:
+                response = self.manageAudioPermissions()
+            case .manageVideoPermissions:
+                response = self.manageVideoPermissions()
+            case .join:
+                response = self.join(call: call)
+            case .stop:
+                response = self.stop()
+            case .mute:
+                response = self.mute()
+            case .unmute:
+                response = self.unmute()
+            case .toggleSound:
+                response = self.toggleVolume(off: call.arguments as? Bool ?? false)
+            case .startLocalVideo:
+                response = self.startLocalVideo()
+            case .stopLocalVideo:
+                response = self.stopLocalVideo()
+            case .initialAudioSelection:
+                response = self.initialAudioSelection()
+            case .listAudioDevices:
+                response = self.listAudioDevices()
+            case .updateAudioDevice:
+                response = self.updateAudioDevice(call: call)
+            case .sendMessage:
+                response = self.sendMessage(call: call)
+            default:
+                response = MethodChannelResponse(result: false, arguments: Response.method_not_implemented)
+            }
+            result(response.toFlutterCompatibleType())
         }
     }
     
@@ -136,7 +146,6 @@ class MethodChannelCoordinator {
         
         self.setupAudioVideoFacadeObservers()
         let meetingStartResponse = MeetingSession.shared.startMeetingAudio()
-        
         return meetingStartResponse
     }
     
@@ -146,9 +155,19 @@ class MethodChannelCoordinator {
         return MethodChannelResponse(result: true, arguments: Response.meeting_stopped_successfully.rawValue)
     }
     
+    func toggleVolume(off:Bool) -> MethodChannelResponse {
+        var slider = (MPVolumeView().subviews.filter{ NSStringFromClass($0.classForCoder) == "MPVolumeSlider" }.first as? UISlider);
+        if(off){
+            currentVolumeValue = AVAudioSession.sharedInstance().outputVolume;
+            slider?.setValue(0, animated: false)
+        }else {
+            slider?.setValue(currentVolumeValue, animated: false)
+        }
+        return MethodChannelResponse(result: true, arguments:"success")
+    }
+    
     func mute() -> MethodChannelResponse {
         let muted = MeetingSession.shared.meetingSession?.audioVideo.realtimeLocalMute() ?? false
-        
         if muted {
             return MethodChannelResponse(result: true, arguments: Response.mute_successful.rawValue)
         } else {
@@ -216,6 +235,22 @@ class MethodChannelCoordinator {
         return MethodChannelResponse(result: false, arguments: Response.audio_device_update_failed.rawValue)
     }
     
+    func sendMessage(call: FlutterMethodCall) -> MethodChannelResponse {
+        do {
+            guard let json = call.arguments as? [String: Any],
+                  let topic = json["topic"] as? String,
+                  let message = json["message"] as? String else {
+                return MethodChannelResponse(result: false, arguments: Response.message_payload_error.rawValue)
+            }
+            try MeetingSession.shared.meetingSession?.audioVideo.realtimeSendDataMessage(topic: topic, data: message.data(using: .utf8), lifetimeMs: json["lifetimeMs"] as? Int32 ?? 300_000)
+        }catch {
+            return MethodChannelResponse(result: false, arguments: "\(Response.message_sent_failed.rawValue) \(error.localizedDescription)")
+        }
+       
+        
+        return MethodChannelResponse(result: true, arguments: Response.message_sent_successful.rawValue)
+    }
+    
     //
     // ————————————————————————————————— Helper Functions —————————————————————————————————
     //
@@ -268,6 +303,12 @@ class MethodChannelCoordinator {
             MeetingSession.shared.meetingSession?.audioVideo.addVideoTileObserver(observer: self.videoTileObserver!)
             MeetingSession.shared.meetingSession?.logger.info(msg: "VideoTileObserver set up...")
         }
+        
+        self.dataMessageObserver = MyDataMessageObserver(withMethodChannel: self)
+        if self.dataMessageObserver != nil {
+            MeetingSession.shared.meetingSession?.audioVideo.addRealtimeDataMessageObserver(topic: "chat", observer: self.dataMessageObserver!)
+            MeetingSession.shared.meetingSession?.logger.info(msg: "DataMessageObserver set up...")
+        }
     }
     
     func stopAudioVideoFacadeObservers() {
@@ -282,6 +323,8 @@ class MethodChannelCoordinator {
         if let vtObserver = self.videoTileObserver {
             MeetingSession.shared.meetingSession?.audioVideo.removeVideoTileObserver(observer: vtObserver)
         }
+        
+        MeetingSession.shared.meetingSession?.audioVideo.removeRealtimeDataMessageObserverFromTopic(topic: "chat")
     }
     
     private func configureAudioSession() {

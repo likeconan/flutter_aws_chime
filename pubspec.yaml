@@ -1,7 +1,7 @@
 name: flutter_aws_chime
-description: A new Flutter plugin project.
-version: 0.0.1
-homepage:
+description: A live stream flutter plugin base on aws chime.
+version: 1.1.0
+homepage: https://github.com/likeconan/flutter_aws_chime
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -13,6 +13,8 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   plugin_platform_interface: ^2.0.2
+  rxdart: ^0.27.7
+  dots_indicator: ^3.0.0
 
 dev_dependencies:
   flutter_test:

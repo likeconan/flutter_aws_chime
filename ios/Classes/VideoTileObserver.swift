@@ -5,25 +5,25 @@
 //  Created by Conan on 2023/9/9.
 //
 
- 
+
 import AmazonChimeSDK
 import AmazonChimeSDKMedia
 import Foundation
 
 class MyVideoTileObserver: VideoTileObserver {
-    weak var methodChannel: MethodChannelCoordinator?
+    var methodChannel: MethodChannelCoordinator
     
     init(withMethodChannel methodChannel: MethodChannelCoordinator) {
         self.methodChannel = methodChannel
     }
     
     func videoTileDidAdd(tileState: VideoTileState) {
-        methodChannel?.callFlutterMethod(method: .videoTileAdd, args: videoTileStateToDict(state: tileState))
+        methodChannel.callFlutterMethod(method: .videoTileAdd, args: videoTileStateToDict(state: tileState))
     }
     
     func videoTileDidRemove(tileState: VideoTileState) {
         MeetingSession.shared.meetingSession?.audioVideo.unbindVideoView(tileId: tileState.tileId)
-        methodChannel?.callFlutterMethod(method: .videoTileRemove, args: videoTileStateToDict(state: tileState))
+        methodChannel.callFlutterMethod(method: .videoTileRemove, args: videoTileStateToDict(state: tileState))
     }
     
     func videoTileDidPause(tileState: VideoTileState) {

@@ -16,7 +16,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   flutter_aws_chime:
     # When depending on this package from a real application you should use:
     #   flutter_aws_chime: ^x.y.z

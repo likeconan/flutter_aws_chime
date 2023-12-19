@@ -1,7 +1,7 @@
 PODS:
-  - AmazonChimeSDK-Bitcode (0.23.1):
-    - AmazonChimeSDKMedia-Bitcode (= 0.18.1)
-  - AmazonChimeSDKMedia-Bitcode (0.18.1)
+  - AmazonChimeSDK-Bitcode (0.23.3):
+    - AmazonChimeSDKMedia-Bitcode (= 0.18.3)
+  - AmazonChimeSDKMedia-Bitcode (0.18.3)
   - Flutter (1.0.0)
   - flutter_aws_chime (0.0.1):
     - AmazonChimeSDK-Bitcode
@@ -28,12 +28,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  AmazonChimeSDK-Bitcode: d84fa7718ad937a1c9e4cce17aee55e379e83601
-  AmazonChimeSDKMedia-Bitcode: d2a2d28dbbc905d95b78edf2a4b91af76eee867a
+  AmazonChimeSDK-Bitcode: 27e2087813356994704ed74132af68641f472882
+  AmazonChimeSDKMedia-Bitcode: a661d4ad464736c36f89719f8a7f705d576de9a3
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_aws_chime: e7321d0ea962b2f8297a6da6b691af80c6de317b
+  flutter_aws_chime: 25121728bde424d5bd197257ecd0155031345824
   integration_test: 13825b8a9334a850581300559b8839134b124670
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.2
