@@ -12,6 +12,13 @@ class MeetingTheme {
     fontWeight: FontWeight.bold,
   );
 
+  TextStyle chatSelfNameTextStyle = TextStyle(
+    color: Colors.black,
+    background: Paint()..color = Colors.white,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  );
+
   TextStyle chatMessageTextStyle = const TextStyle(
     color: Colors.white,
     fontSize: 14,

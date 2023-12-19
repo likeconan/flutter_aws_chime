@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_aws_chime/models/meeting.model.dart';
 import 'package:flutter_aws_chime/models/meeting.theme.model.dart';
+import 'package:flutter_aws_chime/models/message.model.dart';
 import 'package:flutter_aws_chime/utils/snackbar.dart';
 
 import 'icon.button.view.dart';
@@ -127,9 +128,17 @@ class ActionsView extends StatelessWidget {
       return;
     }
     try {
-      var res = await MeetingModel().sendMessage(messageTextController.text);
+      var localAttendee = MeetingModel().getLocalAttendee();
+      var message = messageTextController.text;
+      var res = await MeetingModel().sendMessage(message);
       if (res) {
         MeetingModel().hideControlInSeconds();
+        MeetingModel().receivedMessage.add(MessageModel(
+            localAttendee.attendeeId,
+            localAttendee.externalUserId,
+            message,
+            MeetingModel().topic,
+            DateTime.now().millisecondsSinceEpoch));
         messageTextController.clear();
       } else {
         if (context.mounted) {

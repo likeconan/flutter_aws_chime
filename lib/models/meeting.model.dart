@@ -350,7 +350,9 @@ class MeetingModel
   void videoTileDidAdd(String attendeeId, VideoTileModel videoTile) {
     debugPrint("videoTileDidAdd to: $attendeeId");
     // TODO hack fix, stream height is wrong for mobile side
-    if (!videoTile.isContentShare) {
+    if (!videoTile.isContentShare &&
+        videoTile.videoStreamContentWidth != 960 &&
+        videoTile.videoStreamContentHeight != 540) {
       var width = videoTile.videoStreamContentWidth;
       var height = videoTile.videoStreamContentHeight;
       videoTile.videoStreamContentHeight = max(height, width);
@@ -405,6 +407,7 @@ class MeetingModel
 
   @override
   void messageDidReceive(MessageModel msg) {
+    print("message received in here ${msg.attendeeId}, ${msg.message}");
     if (msg.throttled ?? false) {
       return;
     }

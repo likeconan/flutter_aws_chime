@@ -1,6 +1,6 @@
 name: flutter_aws_chime
 description: A live stream flutter plugin base on aws chime.
-version: 1.1.0
+version: 1.1.0+1
 homepage: https://github.com/likeconan/flutter_aws_chime
 
 environment:

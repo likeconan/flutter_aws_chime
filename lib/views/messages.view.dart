@@ -85,7 +85,23 @@ class _MessagesViewState extends State<MessagesView> {
             style: DefaultTextStyle.of(context).style,
             children: [
               TextSpan(
-                text: '${shortTextWithAsterisk(message.externalUserId)}: ',
+                text: shortTextWithAsterisk(message.externalUserId),
+                style:
+                    MeetingModel().localAttendeeId.value == message.attendeeId
+                        ? TextStyle(
+                            color: Colors.black,
+                            background: Paint()
+                              ..color = Colors.white
+                              ..style = PaintingStyle.fill
+                              ..strokeCap = StrokeCap.round
+                              ..strokeWidth = 1.0,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          )
+                        : MeetingTheme().chatNameTextStyle,
+              ),
+              TextSpan(
+                text: ': ',
                 style: MeetingTheme().chatNameTextStyle,
               ),
               TextSpan(
