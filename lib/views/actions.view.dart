@@ -9,11 +9,30 @@ import 'package:flutter_aws_chime/utils/snackbar.dart';
 
 import 'icon.button.view.dart';
 
-class ActionsView extends StatelessWidget {
-  final messageTextController = TextEditingController();
+class ActionsView extends StatefulWidget {
   final void Function(bool didStop)? onLeave;
 
   ActionsView({super.key, this.onLeave});
+
+  @override
+  State<ActionsView> createState() => _ActionsViewState();
+}
+
+class _ActionsViewState extends State<ActionsView> {
+  final messageTextController = TextEditingController();
+  bool videoOn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  init() async{
+    setState(() async {
+      videoOn = await MeetingModel().toggleVideo();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,31 +61,31 @@ class ActionsView extends StatelessWidget {
             ),
             IconButtonView(
                 icon: MeetingModel().getVideoOn()
-                    ? Icons.videocam_outlined
-                    : Icons.videocam_off_outlined,
+                    ? Icons.videocam
+                    : Icons.videocam_off,
                 onTap: () async {
                   var res = await MeetingModel().toggleVideo();
                   return res
-                      ? Icons.videocam_outlined
-                      : Icons.videocam_off_outlined;
+                      ? Icons.videocam
+                      : Icons.videocam_off;
                 }),
             IconButtonView(
-              icon: Icons.headphones_outlined,
+              icon: Icons.headphones,
               onTap: () => showAudioDeviceDialog(context),
             ),
             IconButtonView(
-              icon: Icons.crop_rotate_outlined,
+              icon: Icons.crop_rotate,
               onTap: () async {
                 MeetingModel().toggleCameraSwitch();
               },
             ),
             IconButtonView(
-              icon: Icons.stop_outlined,
+              icon: Icons.stop,
               iconColor: Colors.red,
               onTap: () async {
                 var res = await MeetingModel().stopMeeting();
-                if (onLeave != null) {
-                  onLeave!(res);
+                if (widget.onLeave != null) {
+                  widget.onLeave!(res);
                 }
               },
             ),
