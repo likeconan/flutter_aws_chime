@@ -67,7 +67,7 @@ class MethodChannelCoordinator {
                 response = self.updateAudioDevice(call: call)
             case .sendMessage:
                 response = self.sendMessage(call: call)
-                case .switchCamera:
+                case .toggleCameraSwitch:
                 response = self.switchCamera()
             default:
                 response = MethodChannelResponse(result: false, arguments: Response.method_not_implemented)
@@ -188,13 +188,10 @@ class MethodChannelCoordinator {
     }
 
     func switchCamera() -> MethodChannelResponse {
-        let rotate = MeetingSession.shared.meetingSession?.audioVideo.switchCamera() ?? false
-        if rotate {
+            MeetingSession.shared.meetingSession?.audioVideo.switchCamera()
             return MethodChannelResponse(result: true, arguments: Response.local_video_camera_success.rawValue)
-        } else {
-            return MethodChannelResponse(result: false, arguments: Response.local_video_camera_failed.rawValue)
+
         }
-    }
 
     
     func startLocalVideo() -> MethodChannelResponse {
