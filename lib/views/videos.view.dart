@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aws_chime/views/pinch_view.dart';
 import '../models/attendee.model.dart';
 import '/views/video_tile.view.dart';
-import '../models/meeting.theme.model.dart';
 
 class VideosView extends StatelessWidget {
   final List<AttendeeModel> attendees;

@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_aws_chime/models/join_info.model.dart';
 import 'package:flutter_aws_chime/models/meeting.model.dart';
 import 'package:flutter_aws_chime/views/main.view.dart';
-import 'package:flutter_aws_chime/views/title.view.dart';
-
 import 'actions.view.dart';
 import 'control_visible.view.dart';
-import 'messages.view.dart';
 import 'page_indicator.view.dart';
 
 class MeetingView extends StatefulWidget {

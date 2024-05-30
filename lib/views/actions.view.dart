@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_aws_chime/models/meeting.model.dart';
 import 'package:flutter_aws_chime/models/meeting.theme.model.dart';
 import 'package:flutter_aws_chime/models/message.model.dart';
