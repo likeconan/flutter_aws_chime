@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.oneplusdream.flutter_aws_chime_example"
-    compileSdkVersion 31
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

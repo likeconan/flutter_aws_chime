@@ -27,6 +27,7 @@ enum MethodCall: String {
     case messageReceived
     case sendMessage
     case toggleSound
+    case toggleCameraSwitch
 }
 
 enum Response: String {
@@ -57,6 +58,8 @@ enum Response: String {
     case local_video_on_success = "iOS: Started local video."
     case local_video_on_failed = "iOS: ERROR could not start local video."
     case local_video_off_success = "iOS: Stopped local video."
+    case local_video_camera_success = "iOS: cmaera swtich success."
+    case local_video_camera_failed = "iOS: cmaera swtich failed."
     
     // Audio Device
     case audio_device_updated = "iOS: Audio device updated."

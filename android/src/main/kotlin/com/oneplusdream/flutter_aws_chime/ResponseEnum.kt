@@ -21,6 +21,8 @@ enum class Response(val msg: String) {
 
     // Video
     local_video_on_success("Android: Started local video."),
+    switch_camera_failed("Android: ERROR failed to Switch Camera"),
+    switch_camera_success("Android: Switch Camera success"),
 
     // Audio Device
     audio_device_updated("Android: Audio device updated"),

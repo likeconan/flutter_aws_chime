@@ -73,4 +73,5 @@ class MethodCallOption {
   static const String sendMessage = "sendMessage";
   static const String messageReceived = "messageReceived";
   static const String toggleSound = "toggleSound";
+  static const String toggleCameraSwitch = "toggleCameraSwitch";
 }

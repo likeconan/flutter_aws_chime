@@ -69,6 +69,9 @@ class MethodChannelCoordinator(binaryMessenger: BinaryMessenger, activity: Activ
                 MethodCallFlutter.stopLocalVideo.call -> {
                     callResult = stopLocalVideo()
                 }
+                MethodCallFlutter.toggleCameraSwitch.call -> {
+                    callResult = switchCamera()
+                }
 
                 MethodCallFlutter.initialAudioSelection.call -> {
                     callResult = initialAudioSelection()
@@ -191,6 +194,12 @@ class MethodChannelCoordinator(binaryMessenger: BinaryMessenger, activity: Activ
         MeetingSessionManager.meetingSession?.audioVideo?.stopLocalVideo()
                 ?: return NULL_MEETING_SESSION_RESPONSE
         return MethodChannelResult(true, Response.local_video_on_success.msg)
+    }
+
+    fun switchCamera(): MethodChannelResult {
+        MeetingSessionManager.meetingSession?.audioVideo?.switchCamera()
+            ?: return NULL_MEETING_SESSION_RESPONSE
+        return MethodChannelResult(true, Response.switch_camera_success.msg)
     }
 
     fun initialAudioSelection(): MethodChannelResult {

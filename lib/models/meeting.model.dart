@@ -133,6 +133,20 @@ class MeetingModel
     return getLocalAttendee().isVideoOn;
   }
 
+  Future<bool> toggleCameraSwitch() async {
+    var local = getLocalAttendee();
+    if(local.isVideoOn) {
+      var res = await methodChannelProvider.callMethod(MethodCallOption.toggleCameraSwitch);
+      if (res == null || !res.result) {
+        throw 'Failed to toggle your audio';
+      }
+      await Future.delayed(const Duration(milliseconds: 1000));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   AttendeeModel getLocalAttendee() {
     var local = currAttendees.value[localAttendeeId.value];
     if (local == null) {

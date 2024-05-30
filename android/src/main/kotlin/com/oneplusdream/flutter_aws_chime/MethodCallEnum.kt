@@ -19,4 +19,5 @@ enum class MethodCall(val call: String) {
     audioSessionDidStop("audioSessionDidStop"),
     sendMessage("sendMessage"),
     messageReceived("messageReceived"),
+    toggleCameraSwitch("toggleCameraSwitch"),
 }

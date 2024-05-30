@@ -32,7 +32,6 @@ class ActionsView extends StatelessWidget {
         height: MeetingTheme().actionViewHeight,
         child: Row(
           children: [
-            messageFormContainer(context),
             IconButtonView(
               icon: MeetingModel().getMuteStatus() ? Icons.mic_off : Icons.mic,
               onTap: () async {
@@ -57,14 +56,7 @@ class ActionsView extends StatelessWidget {
             IconButtonView(
               icon: Icons.crop_rotate_outlined,
               onTap: () async {
-                if (MediaQuery.of(context).orientation ==
-                    Orientation.portrait) {
-                  SystemChrome.setPreferredOrientations(
-                      [DeviceOrientation.landscapeLeft]);
-                } else {
-                  SystemChrome.setPreferredOrientations(
-                      [DeviceOrientation.portraitUp]);
-                }
+                MeetingModel().toggleCameraSwitch();
               },
             ),
           ],
