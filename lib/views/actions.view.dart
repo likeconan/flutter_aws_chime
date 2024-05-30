@@ -29,8 +29,9 @@ class _ActionsViewState extends State<ActionsView> {
   }
 
   init() async{
-    setState(() async {
-      videoOn = await MeetingModel().toggleVideo();
+    var res = await MeetingModel().toggleVideo();
+    setState(() {
+      videoOn = res;
     });
   }
 
