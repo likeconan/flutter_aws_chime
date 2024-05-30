@@ -60,22 +60,14 @@ class VideosView extends StatelessWidget {
                   paramsVT: item.videoTile!.tileId,
                 ),
               )
-            : Column(
+            : const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.account_circle,
                     size: 48,
                     color: Colors.white70,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(MeetingTheme().baseUnit),
-                    child: Text(
-                      item.externalUserId,
-                      softWrap: true,
-                      style: MeetingTheme().nameTextStyle,
-                    ),
-                  ),
+                  )
                 ],
               );
 

@@ -43,16 +43,7 @@ class _MeetingViewState extends State<MeetingView> {
           children: [
             const MainView(),
             ControlVisibleView(
-              child: TitleView(
-                title: widget.joinData.meeting.externalMeetingId,
-                onLeave: widget.onLeave,
-              ),
-            ),
-            const ControlVisibleView(
-              child: MessagesView(),
-            ),
-            ControlVisibleView(
-              child: ActionsView(),
+              child: ActionsView(onLeave: widget.onLeave),
             ),
             const ControlVisibleView(
               child: PageIndicatorView(),

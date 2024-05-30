@@ -12,8 +12,9 @@ import 'icon.button.view.dart';
 
 class ActionsView extends StatelessWidget {
   final messageTextController = TextEditingController();
+  final void Function(bool didStop)? onLeave;
 
-  ActionsView({super.key});
+  ActionsView({super.key, this.onLeave});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class ActionsView extends StatelessWidget {
         height: MeetingTheme().actionViewHeight,
         child: Row(
           children: [
+            const Spacer(),
             IconButtonView(
               icon: MeetingModel().getMuteStatus() ? Icons.mic_off : Icons.mic,
               onTap: () async {
@@ -59,6 +61,17 @@ class ActionsView extends StatelessWidget {
                 MeetingModel().toggleCameraSwitch();
               },
             ),
+            IconButtonView(
+              icon: Icons.stop_outlined,
+              iconColor: Colors.red,
+              onTap: () async {
+                var res = await MeetingModel().stopMeeting();
+                if (onLeave != null) {
+                  onLeave!(res);
+                }
+              },
+            ),
+            const Spacer(),
           ],
         ),
       ),
@@ -90,15 +103,6 @@ class ActionsView extends StatelessWidget {
                     trailing: selected == e ? selectedIcon : null,
                   ))
               .toList();
-          // TODO find the way to turn off sound
-          // items.add(ListTile(
-          //   leading: const Icon(Icons.volume_off_outlined),
-          //   title: const Text('Turn off sound'),
-          //   onTap: () {
-          //     Navigator.pop(context, '');
-          //   },
-          //   trailing: selected == '' ? selectedIcon : null,
-          // ));
           return SizedBox(
             height: 200,
             child: ListView(
